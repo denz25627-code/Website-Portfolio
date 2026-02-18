@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deni Maulana | Cloud Computing Enthusiast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+    <style>
+        :root {
+            --bg: #0a0f1a;
+            --bg-secondary: #111827;
+            --fg: #f0f4f8;
+            --muted: #64748b;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --card: rgba(17, 24, 39, 0.8);
+            --border: rgba(100, 116, 139, 0.2);
+            --cyan: #22d3ee;
+            --teal: #14b8a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            overflow-x: hidden;
+        }
+        
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 50%, var(--teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glow-box {
+            box-shadow: 0 0 40px var(--accent-glow), 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 212, 170, 0.15);
+            border-color: var(--accent);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--teal) 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+        
+        .skill-bar {
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            height: 100%;
+            border-radius: 999px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .skill-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        
+        .typing-cursor {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .timeline-line {
+            background: linear-gradient(180deg, var(--accent), var(--cyan), transparent);
+        }
+        
+        .terminal-header {
+            background: linear-gradient(90deg, #1e293b, #334155);
+        }
+        
+        /* Profile Photo Styles */
+        .profile-photo-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .profile-photo-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--cyan), var(--teal));
+            z-index: -1;
+            animation: rotate-gradient 3s linear infinite;
+        }
+        
+        @keyframes rotate-gradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--bg);
+        }
+        
+        .profile-photo-large {
+            width: 280px;
+            height: 280px;
+        }
+        
+        .profile-photo-small {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .profile-photo-hero {
+            width: 180px;
+            height: 180px;
+        }
+        
+        .profile-card-photo {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: #22c55e;
+            border: 4px solid var(--bg);
+            border-radius: 50%;
+            z-index: 10;
+        }
+        
+        .photo-glow {
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -2;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        .hero-photo-container {
+            position: relative;
+        }
+        
+        .hero-photo-container::after {
+            content: '';
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(circle, rgba(0, 212, 170, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+        
+        .floating-badge {
+            position: absolute;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 16px;
+            backdrop-filter: blur(10px);
+            animation: float-badge 4s ease-in-out infinite;
+        }
+        
+        .floating-badge-1 {
+            top: 10%;
+            right: -20px;
+            animation-delay: 0s;
+        }
+        
+        .floating-badge-2 {
+            bottom: 20%;
+            left: -30px;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float-badge {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        :focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="scrollbar-hide">
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <!-- Navigation -->
+        <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[rgba(10,15,26,0.8)] border-b border-[rgba(100,116,139,0.1)]">
+            <div class="max-w-7xl mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <a href="#" class="flex items-center gap-3 group">
+                        <!-- Nav Avatar -->
+                        <div class="profile-photo-wrapper">
+                            <img src="Foto utama 1.jpg" 
+                                 alt="Deni Maulana" 
+                                 class="profile-photo profile-photo-small">
+                        </div>
+                        <span class="text-xl font-bold gradient-text">DM</span>
+                    </a>
+                    
+                    <div class="hidden md:flex items-center gap-8">
+                        <a href="#about" class="nav-link text-sm text-gray-300 hover:text-white transition-colors">Tentang</a>
+                        <a href="#skills" class="nav-link text-sm text-gray-300 hover:text-white transition-colors">Keahlian</a>
+                        <a href="#experience" class="nav-link text-sm text-gray-300 hover:text-white transition-colors">Pengalaman</a>
+                        <a href="#projects" class="nav-link text-sm text-gray-300 hover:text-white transition-colors">Proyek</a>
+                        <a href="#contact" class="btn-primary px-5 py-2 rounded-full text-sm font-semibold text-gray-900">Hubungi Saya</a>
+                    </div>
+                    
+                    <button id="mobile-menu-btn" class="md:hidden text-white p-2" aria-label="Menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden bg-[rgba(10,15,26,0.95)] backdrop-blur-xl border-t border-[rgba(100,116,139,0.1)]">
+                <div class="px-6 py-4 flex flex-col gap-4">
+                    <a href="#about" class="text-gray-300 hover:text-white transition-colors py-2">Tentang</a>
+                    <a href="#skills" class="text-gray-300 hover:text-white transition-colors py-2">Keahlian</a>
+                    <a href="#experience" class="text-gray-300 hover:text-white transition-colors py-2">Pengalaman</a>
+                    <a href="#projects" class="text-gray-300 hover:text-white transition-colors py-2">Proyek</a>
+                    <a href="#contact" class="btn-primary px-5 py-3 rounded-full text-sm font-semibold text-gray-900 text-center">Hubungi Saya</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center relative px-6 pt-20">
+            <div class="max-w-7xl mx-auto w-full">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div class="reveal">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[rgba(0,212,170,0.1)] border border-[rgba(0,212,170,0.3)] mb-6">
+                            <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse"></span>
+                            <span class="text-sm text-[var(--accent)] font-mono">Available for opportunities</span>
+                        </div>
+                        
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                            Halo, saya<br>
+                            <span class="gradient-text">Deni Maulana</span>
+                        </h1>
+                        
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="text-xl sm:text-2xl text-gray-300">Cloud Computing</span>
+                            <span class="text-[var(--accent)]">|</span>
+                            <span class="text-xl sm:text-2xl text-gray-300">DevOps Enthusiast</span>
+                        </div>
+                        
+                        <p class="text-gray-400 text-lg mb-8 max-w-xl leading-relaxed">
+                            Pelajar SMA Negeri 1 Jasinga yang passionate dalam teknologi cloud, 
+                            infrastructure automation, dan modern DevOps practices.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#contact" class="btn-primary px-8 py-4 rounded-full font-semibold text-gray-900 inline-flex items-center gap-2">
+                                <span>Hubungi Saya</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            <a href="#projects" class="px-8 py-4 rounded-full font-semibold border border-[var(--accent)] text-[var(--accent)] hover:bg-[rgba(0,212,170,0.1)] transition-all">
+                                Lihat Proyek
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="reveal stagger-2 flex justify-center lg:justify-end">
+                        <div class="relative">
+                            <!-- Hero Photo -->
+                            <div class="hero-photo-container">
+                                <div class="relative">
+                                    <div class="photo-glow"></div>
+                                    <div class="profile-photo-wrapper">
+                                        <img src="Foto utama 1.jpg" 
+                                             alt="Deni Maulana - Cloud Computing Enthusiast" 
+                                             class="profile-photo profile-photo-hero">
+                                    </div>
+                                    <div class="status-indicator"></div>
+                                </div>
+                                
+                                <!-- Floating Badges -->
+                                <div class="floating-badge floating-badge-1 hidden lg:flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-[var(--accent)]" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                                    </svg>
+                                    <span class="text-sm font-medium">Cloud Expert</span>
+                                </div>
+                                
+                                <div class="floating-badge floating-badge-2 hidden lg:flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-[var(--cyan)]" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                    <span class="text-sm font-medium">DevOps</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Terminal Card (below photo on mobile) -->
+                            <div class="mt-8 lg:hidden">
+                                <div class="terminal-header rounded-t-xl px-4 py-3 flex items-center gap-2">
+                                    <div class="flex gap-2">
+                                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-400 ml-4 font-mono">deni@cloud:~</span>
+                                </div>
+                                <div class="bg-[var(--bg-secondary)] rounded-b-xl p-6 border border-[var(--border)] glow-box">
+                                    <div class="font-mono text-sm space-y-2">
+                                        <div class="text-gray-500">$ whoami</div>
+                                        <div class="text-[var(--cyan)]">deni-maulana</div>
+                                        <div class="text-gray-500 mt-4">$ cat skills.txt</div>
+                                        <div class="text-[var(--accent)]">Cloud Computing | DevOps | Linux</div>
+                                        <div class="text-[var(--accent)]">Docker | Kubernetes | AWS | GCP</div>
+                                        <div class="text-gray-500 mt-4">$ echo $STATUS</div>
+                                        <div class="text-green-400">Ready to deploy amazing things!</div>
+                                        <div class="flex items-center mt-2">
+                                            <span class="text-gray-500">$</span>
+                                            <span class="typing-cursor ml-1 text-[var(--accent)]">_</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+                <span class="text-xs text-gray-500">Scroll</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[var(--accent)]">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="py-32 px-6 relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(0,212,170,0.02)] to-transparent pointer-events-none"></div>
+            
+            <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="reveal flex justify-center">
+                        <div class="relative">
+                            <!-- Profile Card with Photo -->
+                            <div class="relative">
+                                <!-- Background Glow -->
+                                <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--accent)] to-[var(--cyan)] opacity-20 blur-3xl"></div>
+                                
+                                <div class="relative bg-[var(--card)] rounded-3xl border border-[var(--border)] p-8 flex flex-col items-center">
+                                    <!-- Profile Photo -->
+                                    <div class="relative mb-6">
+                                        <div class="photo-glow"></div>
+                                        <div class="profile-photo-wrapper">
+                                            <img src="Foto utama 1.jpg" 
+                                                 alt="Deni Maulana" 
+                                                 class="profile-photo profile-card-photo">
+                                        </div>
+                                        <div class="status-indicator" style="width: 20px; height: 20px; bottom: 8px; right: 8px;"></div>
+                                    </div>
+                                    
+                                    <h3 class="text-2xl font-bold gradient-text mb-2">Deni Maulana</h3>
+                                    <p class="text-gray-400 text-center mb-4">SMAN 1 Jasinga</p>
+                                    
+                                    <div class="flex items-center gap-2 mb-6">
+                                        <svg class="w-5 h-5 text-[var(--accent)]" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                        </svg>
+                                        <span class="text-sm text-gray-400">Tenjo, Bogor, Indonesia</span>
+                                    </div>
+                                    
+                                    <div class="flex gap-6 w-full justify-center">
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-[var(--accent)]">15+</div>
+                                            <div class="text-xs text-gray-500">Sertifikat</div>
+                                        </div>
+                                        <div class="w-px bg-[var(--border)]"></div>
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-[var(--cyan)]">10+</div>
+                                            <div class="text-xs text-gray-500">Proyek</div>
+                                        </div>
+                                        <div class="w-px bg-[var(--border)]"></div>
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-[var(--teal)]">2+</div>
+                                            <div class="text-xs text-gray-500">Tahun</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Social Links -->
+                                    <div class="flex gap-4 mt-6 pt-6 border-t border-[var(--border)] w-full justify-center">
+                                        <a href="https://github.com/denimaulana" target="_blank" rel="noopener noreferrer" 
+                                           class="w-10 h-10 rounded-xl bg-[rgba(0,212,170,0.1)] border border-[rgba(0,212,170,0.2)] flex items-center justify-center hover:bg-[rgba(0,212,170,0.2)] transition-all group"
+                                           aria-label="GitHub Profile">
+                                            <svg class="w-5 h-5 text-gray-400 group-hover:text-[var(--accent)] transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                            </svg>
+                                        </a>
+                                        <a href="https://linkedin.com/in/denimaulana" target="_blank" rel="noopener noreferrer"
+                                           class="w-10 h-10 rounded-xl bg-[rgba(0,212,170,0.1)] border border-[rgba(0,212,170,0.2)] flex items-center justify-center hover:bg-[rgba(0,212,170,0.2)] transition-all group"
+                                           aria-label="LinkedIn Profile">
+                                            <svg class="w-5 h-5 text-gray-400 group-hover:text-[var(--cyan)] transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                            </svg>
+                                        </a>
+                                        <a href="mailto:mdeni4969@gmail.com"
+                                           class="w-10 h-10 rounded-xl bg-[rgba(0,212,170,0.1)] border border-[rgba(0,212,170,0.2)] flex items-center justify-center hover:bg-[rgba(0,212,170,0.2)] transition-all group"
+                                           aria-label="Email">
+                                            <svg class="w-5 h-5 text-gray-400 group-hover:text-[var(--teal)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                                <polyline points="22,6 12,13 2,6"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Decorative Elements -->
+                            <div class="absolute -top-8 -right-8 w-24 h-24 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-[var(--cyan)] opacity-10 blur-2xl"></div>
+                            <div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-gradient-to-br from-[var(--cyan)] to-[var(--teal)] opacity-10 blur-2xl"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="reveal stagger-2">
+                        <span class="text-[var(--accent)] font-mono text-sm tracking-wider">TENTANG SAYA</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold mt-4 mb-6">
+                            Passionate in Building
+                            <span class="gradient-text">Cloud Infrastructure</span>
+                        </h2>
+                        
+                        <div class="space-y-4 text-gray-400 leading-relaxed">
+                            <p>
+                                Saya adalah pelajar di SMA Negeri 1 Jasinga yang memiliki ketertarikan mendalam 
+                                pada teknologi cloud computing dan DevOps. Perjalanan saya dimulai dari rasa 
+                                penasaran terhadap bagaimana sistem besar seperti Google, Netflix, dan Amazon 
+                                mengelola infrastruktur mereka.
+                            </p>
+                            <p>
+                                Dengan semangat belajar yang tinggi, saya telah mengikuti berbagai pelatihan 
+                                dan sertifikasi cloud, termasuk Google Cloud Skills Boost, AWS Educate, dan 
+                                program-program pelatihan DevOps lainnya. Saya percaya bahwa teknologi cloud 
+                                adalah masa depan, dan saya ingin menjadi bagian dari revolusi digital ini.
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mt-8">
+                            <div class="bg-[var(--card)] rounded-xl p-4 border border-[var(--border)] card-hover">
+                                <div class="text-[var(--accent)] mb-2">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                </div>
+                                <div class="font-semibold">Problem Solver</div>
+                                <div class="text-sm text-gray-500">Analitis & Kreatif</div>
+                            </div>
+                            
+                            <div class="bg-[var(--card)] rounded-xl p-4 border border-[var(--border)] card-hover">
+                                <div class="text-[var(--cyan)] mb-2">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="2" y1="12" x2="22" y2="12"/>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                    </svg>
+                                </div>
+                                <div class="font-semibold">Fast Learner</div>
+                                <div class="text-sm text-gray-500">Adaptif & Proaktif</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills" class="py-32 px-6 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <span class="text-[var(--accent)] font-mono text-sm tracking-wider">KEAHLIAN</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold mt-4">
+                        Technical <span class="gradient-text">Skills</span>
+                    </h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cloud Platforms -->
+                    <div class="reveal stagger-1 bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover group">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--cyan)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Cloud Platforms</h3>
+                                <p class="text-sm text-gray-500">Infrastructure as a Service</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>Google Cloud Platform</span>
+                                    <span class="text-[var(--accent)]">85%</span>
+                                </div>
+                                <div class="h-2 bg-[rgba(100,116,139,0.2)] rounded-full overflow-hidden">
+                                    <div class="skill-bar" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>AWS</span>
+                                    <span class="text-[var(--accent)]">75%</span>
+                                </div>
+                                <div class="h-2 bg-[rgba(100,116,139,0.2)] rounded-full overflow-hidden">
+                                    <div class="skill-bar" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>Azure</span>
+                                    <span class="text-[var(--accent)]">60%</span>
+                                </div>
+                                <div class="h-2 bg-[rgba(100,116,139,0.2)] rounded-full overflow-hidden">
+                                    <div class="skill-bar" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- DevOps Tools -->
+                    <div class="reveal stagger-2 bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover group">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--cyan)] to-[var(--teal)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">DevOps Tools</h3>
+                                <p class="text-sm text-gray-500">CI/CD & Automation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Docker</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Kubernetes</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Jenkins</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Git</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">GitHub Actions</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Terraform</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Programming -->
+                    <div class="reveal stagger-3 bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover group">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--teal)] to-[var(--accent)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <polyline points="16 18 22 12 16 6"/>
+                                    <polyline points="8 6 2 12 8 18"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Programming</h3>
+                                <p class="text-sm text-gray-500">Scripting & Development</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>Python</span>
+                                    <span class="text-[var(--accent)]">80%</span>
+                                </div>
+                                <div class="h-2 bg-[rgba(100,116,139,0.2)] rounded-full overflow-hidden">
+                                    <div class="skill-bar" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>Bash/Shell</span>
+                                    <span class="text-[var(--accent)]">85%</span>
+                                </div>
+                                <div class="h-2 bg-[rgba(100,116,139,0.2)] rounded-full overflow-hidden">
+                                    <div class="skill-bar" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span>YAML/JSON</span>
+                                    <span class="text-[var(--accent)]">90%</span>
+                                </div>
+                                <div class="h-2 bg-[rgba(100,116,139,0.2)] rounded-full overflow-hidden">
+                                    <div class="skill-bar" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- OS & Infrastructure -->
+                    <div class="reveal stagger-4 bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover group">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--cyan)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                    <line x1="8" y1="21" x2="16" y2="21"/>
+                                    <line x1="12" y1="17" x2="12" y2="21"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Operating Systems</h3>
+                                <p class="text-sm text-gray-500">Server Administration</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-sm border border-[rgba(34,211,238,0.2)]">Ubuntu/Debian</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-sm border border-[rgba(34,211,238,0.2)]">CentOS/RHEL</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-sm border border-[rgba(34,211,238,0.2)]">Windows Server</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-sm border border-[rgba(34,211,238,0.2)]">Networking</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Databases -->
+                    <div class="reveal stagger-5 bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover group">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--cyan)] to-[var(--teal)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Databases</h3>
+                                <p class="text-sm text-gray-500">Data Management</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-sm border border-[rgba(20,184,166,0.2)]">MySQL</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-sm border border-[rgba(20,184,166,0.2)]">PostgreSQL</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-sm border border-[rgba(20,184,166,0.2)]">MongoDB</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-sm border border-[rgba(20,184,166,0.2)]">Redis</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Soft Skills -->
+                    <div class="reveal stagger-5 bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover group">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--teal)] to-[var(--accent)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Soft Skills</h3>
+                                <p class="text-sm text-gray-500">Professional Development</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Team Collaboration</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Communication</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Problem Solving</span>
+                            <span class="px-3 py-1.5 rounded-lg bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-sm border border-[rgba(0,212,170,0.2)]">Time Management</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section id="experience" class="py-32 px-6 relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(0,212,170,0.02)] to-transparent pointer-events-none"></div>
+            
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <span class="text-[var(--accent)] font-mono text-sm tracking-wider">PENGALAMAN</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold mt-4">
+                        Journey & <span class="gradient-text">Achievements</span>
+                    </h2>
+                </div>
+                
+                <div class="relative">
+                    <!-- Timeline Line -->
+                    <div class="absolute left-8 md:left-1/2 top-0 bottom-0 w-px timeline-line hidden md:block"></div>
+                    
+                    <div class="space-y-12">
+                        <!-- Experience 1 -->
+                        <div class="reveal stagger-1 relative flex flex-col md:flex-row gap-8 md:gap-16">
+                            <div class="md:w-1/2 md:text-right md:pr-16">
+                                <div class="bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover inline-block w-full">
+                                    <div class="flex items-center gap-3 mb-4 md:flex-row-reverse">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                            </svg>
+                                        </div>
+                                        <div class="md:text-right">
+                                            <h3 class="font-bold">Google Cloud Skills Boost</h3>
+                                            <p class="text-sm text-[var(--accent)]">Cloud Infrastructure Learning Path</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 text-sm">
+                                        Menyelesaikan berbagai modul pembelajaran tentang Google Cloud Platform, 
+                                        termasuk Compute Engine, Cloud Storage, Kubernetes Engine, dan Cloud Functions.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mt-4 md:justify-end">
+                                        <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">GCP</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Kubernetes</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Compute Engine</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="absolute left-8 md:left-1/2 top-8 w-4 h-4 rounded-full bg-[var(--accent)] -translate-x-1/2 hidden md:block">
+                                <div class="absolute inset-0 rounded-full bg-[var(--accent)] pulse-ring"></div>
+                            </div>
+                            
+                            <div class="md:w-1/2 md:pl-16 flex items-center">
+                                <span class="px-4 py-2 rounded-full bg-[var(--card)] border border-[var(--border)] font-mono text-sm text-[var(--accent)]">2024</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience 2 -->
+                        <div class="reveal stagger-2 relative flex flex-col md:flex-row-reverse gap-8 md:gap-16">
+                            <div class="md:w-1/2 md:text-left md:pl-16">
+                                <div class="bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover inline-block w-full">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold">AWS Educate</h3>
+                                            <p class="text-sm text-[var(--accent)]">Cloud Practitioner Training</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 text-sm">
+                                        Mengikuti pelatihan AWS Educate untuk memahami fundamental cloud computing, 
+                                        Mengikuti pelatihan aplikasi perkantoran seperti : -exel,word,powerpoint.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mt-4">
+                                        <span class="px-2 py-1 rounded bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-xs">AWS</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-xs">EC2</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-xs">Lambda</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="absolute left-8 md:left-1/2 top-8 w-4 h-4 rounded-full bg-[var(--cyan)] -translate-x-1/2 hidden md:block">
+                                <div class="absolute inset-0 rounded-full bg-[var(--cyan)] pulse-ring"></div>
+                            </div>
+                            
+                            <div class="md:w-1/2 md:pr-16 flex items-center md:justify-end">
+                                <span class="px-4 py-2 rounded-full bg-[var(--card)] border border-[var(--border)] font-mono text-sm text-[var(--cyan)]">2023</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience 3 -->
+                        <div class="reveal stagger-3 relative flex flex-col md:flex-row gap-8 md:gap-16">
+                            <div class="md:w-1/2 md:text-right md:pr-16">
+                                <div class="bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover inline-block w-full">
+                                    <div class="flex items-center gap-3 mb-4 md:flex-row-reverse">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                                                <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="md:text-right">
+                                            <h3 class="font-bold">Linux System Administration</h3>
+                                            <p class="text-sm text-[var(--accent)]">Self-learning & Practice Labs</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 text-sm">
+                                        Memahami Penggunaan instalasi dan konfigurasi server Linux untuk kebutuhan layanan internal perusahaan.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mt-4 md:justify-end">
+                                        <span class="px-2 py-1 rounded bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-xs">Linux</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-xs">Bash</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-xs">Networking</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="absolute left-8 md:left-1/2 top-8 w-4 h-4 rounded-full bg-[var(--teal)] -translate-x-1/2 hidden md:block">
+                                <div class="absolute inset-0 rounded-full bg-[var(--teal)] pulse-ring"></div>
+                            </div>
+                            
+                            <div class="md:w-1/2 md:pl-16 flex items-center">
+                                <span class="px-4 py-2 rounded-full bg-[var(--card)] border border-[var(--border)] font-mono text-sm text-[var(--teal)]">2023 - Present</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Experience 4 -->
+                        <div class="reveal stagger-4 relative flex flex-col md:flex-row-reverse gap-8 md:gap-16">
+                            <div class="md:w-1/2 md:text-left md:pl-16">
+                                <div class="bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] card-hover inline-block w-full">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold">Aplikasi perkantoran</h3>
+                                            <p class="text-sm text-[var(--accent)]">Container Technologies</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-gray-400 text-sm">
+                                        Mempelajari fungsi aplikasi perkantoran dan mengelola data data administrasi atau barang.
+                                    </p> 
+                                    <div class="flex flex-wrap gap-2 mt-4">
+                                        <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Word</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Exel</span>
+                                        <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Powerpoint</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="absolute left-8 md:left-1/2 top-8 w-4 h-4 rounded-full bg-[var(--accent)] -translate-x-1/2 hidden md:block">
+                                <div class="absolute inset-0 rounded-full bg-[var(--accent)] pulse-ring"></div>
+                            </div>
+                            
+                            <div class="md:w-1/2 md:pr-16 flex items-center md:justify-end">
+                                <span class="px-4 py-2 rounded-full bg-[var(--card)] border border-[var(--border)] font-mono text-sm text-[var(--accent)]">2024-2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section id="projects" class="py-32 px-6 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <span class="text-[var(--accent)] font-mono text-sm tracking-wider">PROYEK</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold mt-4">
+                        Featured <span class="gradient-text">Projects</span>
+                    </h2>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Project 1 -->
+                    <div class="reveal stagger-1 group">
+                        <div class="bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden card-hover">
+                            <div class="h-48 bg-gradient-to-br from-[var(--accent)] via-[var(--cyan)] to-[var(--teal)] opacity-20 relative overflow-hidden">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <svg class="w-20 h-20 text-white opacity-30" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">Cloud Infrastructure Deployment</h3>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Deployment aplikasi web menggunakan Google Cloud Platform dengan 
+                                    Compute Engine, Cloud SQL, dan Cloud Storage untuk high availability.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">GCP</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Compute Engine</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Cloud SQL</span>
+                                </div>
+                                <a href="#" class="inline-flex items-center gap-2 text-[var(--accent)] text-sm font-semibold hover:gap-3 transition-all">
+                                    <span>View Details</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="reveal stagger-2 group">
+                        <div class="bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden card-hover">
+                            <div class="h-48 bg-gradient-to-br from-[var(--cyan)] via-[var(--teal)] to-[var(--accent)] opacity-20 relative overflow-hidden">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <svg class="w-20 h-20 text-white opacity-30" viewBox="0 0 24 24" fill="currentColor">
+                                        <circle cx="12" cy="12" r="3"/>
+                                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2 group-hover:text-[var(--cyan)] transition-colors">Dockerized Web Application</h3>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Containerization aplikasi web menggunakan Docker dengan multi-stage build, 
+                                    Docker Compose untuk orchestration, dan CI/CD pipeline.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-2 py-1 rounded bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-xs">Docker</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-xs">Docker Compose</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(34,211,238,0.1)] text-[var(--cyan)] text-xs">CI/CD</span>
+                                </div>
+                                <a href="#" class="inline-flex items-center gap-2 text-[var(--cyan)] text-sm font-semibold hover:gap-3 transition-all">
+                                    <span>View Details</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="reveal stagger-3 group">
+                        <div class="bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden card-hover">
+                            <div class="h-48 bg-gradient-to-br from-[var(--teal)] via-[var(--accent)] to-[var(--cyan)] opacity-20 relative overflow-hidden">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <svg class="w-20 h-20 text-white opacity-30" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2 group-hover:text-[var(--teal)] transition-colors">Automated Backup System</h3>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Sistem backup otomatis menggunakan Bash scripting dan cron jobs, 
+                                    dengan integrasi cloud storage untuk disaster recovery.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-2 py-1 rounded bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-xs">Bash</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-xs">Linux</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(20,184,166,0.1)] text-[var(--teal)] text-xs">Automation</span>
+                                </div>
+                                <a href="#" class="inline-flex items-center gap-2 text-[var(--teal)] text-sm font-semibold hover:gap-3 transition-all">
+                                    <span>View Details</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 4 -->
+                    <div class="reveal stagger-4 group">
+                        <div class="bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden card-hover">
+                            <div class="h-48 bg-gradient-to-br from-[var(--accent)] via-[var(--teal)] to-[var(--cyan)] opacity-20 relative overflow-hidden">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <svg class="w-20 h-20 text-white opacity-30" viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                    </svg>
+                                </div>
+                                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors">Monitoring Dashboard</h3>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Dashboard monitoring server menggunakan Prometheus dan Grafana 
+                                    untuk real-time system metrics dan alerting.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Prometheus</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Grafana</span>
+                                    <span class="px-2 py-1 rounded bg-[rgba(0,212,170,0.1)] text-[var(--accent)] text-xs">Monitoring</span>
+                                </div>
+                                <a href="#" class="inline-flex items-center gap-2 text-[var(--accent)] text-sm font-semibold hover:gap-3 transition-all">
+                                    <span>View Details</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 px-6 relative">
+            <div class="absolute inset-0 bg-gradient-to-t from-[rgba(0,212,170,0.05)] to-transparent pointer-events-none"></div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <span class="text-[var(--accent)] font-mono text-sm tracking-wider">KONTAK</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold mt-4">
+                        Let's <span class="gradient-text">Connect</span>
+                    </h2>
+                    <p class="text-gray-400 mt-4 max-w-lg mx-auto">
+                        Tertarik untuk berkolaborasi atau memiliki pertanyaan? 
+                        Jangan ragu untuk menghubungi saya!
+                    </p>
+                </div>
+                
+                <div class="reveal stagger-1">
+                    <div class="bg-[var(--card)] rounded-3xl border border-[var(--border)] p-8 md:p-12 glow-box">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Contact Info -->
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="font-bold text-xl mb-4">Informasi Kontak</h3>
+                                    <p class="text-gray-400 text-sm">
+                                        Saya selalu terbuka untuk mendiskusikan peluang baru, 
+                                        proyek menarik, atau sekadar berbagi pengalaman tentang cloud computing dan aplikasi perkantoran.
+                                    </p>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <a href="mailto:mdeni4969@gmail.com" class="flex items-center gap-4 p-4 rounded-xl bg-[rgba(0,212,170,0.05)] border border-[rgba(0,212,170,0.1)] hover:border-[var(--accent)] transition-all group">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--cyan)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                                <polyline points="22,6 12,13 2,6"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm text-gray-500">Email</div>
+                                            <div class="font-semibold">mdeni4969@gmail.com</div>
+                                        </div>
+                                    </a>
+                                    
+                                    <a href="tel:085773091102" class="flex items-center gap-4 p-4 rounded-xl bg-[rgba(0,212,170,0.05)] border border-[rgba(0,212,170,0.1)] hover:border-[var(--accent)] transition-all group">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--cyan)] to-[var(--teal)] flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm text-gray-500">Telepon</div>
+                                            <div class="font-semibold">085773091102</div>
+                                        </div>
+                                    </a>
+                                    
+                                    <div class="flex items-center gap-4 p-4 rounded-xl bg-[rgba(0,212,170,0.05)] border border-[rgba(0,212,170,0.1)]">
+                                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--teal)] to-[var(--accent)] flex items-center justify-center">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm text-gray-500">Lokasi</div>
+                                            <div class="font-semibold">Tenjo, Bogor, Indonesia</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Form -->
+                            <div>
+                                <form id="contact-form" class="space-y-4">
+                                    <div>
+                                        <label for="name" class="block text-sm text-gray-400 mb-2">Nama Lengkap</label>
+                                        <input type="text" id="name" name="name" required
+                                            class="w-full px-4 py-3 rounded-xl bg-[rgba(100,116,139,0.1)] border border-[var(--border)] focus:border-[var(--accent)] focus:outline-none transition-colors"
+                                            placeholder="Nama Anda">
+                                    </div>
+                                    <div>
+                                        <label for="email" class="block text-sm text-gray-400 mb-2">Email</label>
+                                        <input type="email" id="email" name="email" required
+                                            class="w-full px-4 py-3 rounded-xl bg-[rgba(100,116,139,0.1)] border border-[var(--border)] focus:border-[var(--accent)] focus:outline-none transition-colors"
+                                            placeholder="email@example.com">
+                                    </div>
+                                    <div>
+                                        <label for="message" class="block text-sm text-gray-400 mb-2">Pesan</label>
+                                        <textarea id="message" name="message" rows="4" required
+                                            class="w-full px-4 py-3 rounded-xl bg-[rgba(100,116,139,0.1)] border border-[var(--border)] focus:border-[var(--accent)] focus:outline-none transition-colors resize-none"
+                                            placeholder="Tulis pesan Anda..."></textarea>
+                                    </div>
+                                    <button type="submit" class="w-full btn-primary py-4 rounded-xl font-semibold text-gray-900 flex items-center justify-center gap-2">
+                                        <span>Kirim Pesan</span>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="22" y1="2" x2="11" y2="13"/>
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="py-8 px-6 border-t border-[var(--border)]">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <!-- Footer Photo -->
+                    <div class="profile-photo-wrapper" style="transform: scale(0.7);">
+                        <img src="Foto utama 1.jpg" 
+                             alt="Deni Maulana" 
+                             class="profile-photo profile-photo-small">
+                    </div>
+                    <div class="text-center md:text-left">
+                        <div class="font-bold gradient-text mb-1">Deni Maulana</div>
+                        <div class="text-sm text-gray-500">Cloud Computing Enthusiast | SMAN 1 Jasinga</div>
+                    </div>
+                </div>
+                
+                <div class="text-sm text-gray-500">
+                    2026 All rights reserved.
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script type="module">
+        import * as THREE from 'three';
+        
+        // Three.js Background
+        const container = document.getElementById('canvas-container');
+        
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 50;
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+        
+        // Particles
+        const particleCount = 1500;
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        
+        const color1 = new THREE.Color(0x00d4aa);
+        const color2 = new THREE.Color(0x22d3ee);
+        const color3 = new THREE.Color(0x14b8a6);
+        
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 200;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+            
+            const colorChoice = Math.random();
+            let color;
+            if (colorChoice < 0.33) color = color1;
+            else if (colorChoice < 0.66) color = color2;
+            else color = color3;
+            
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+            
+            sizes[i] = Math.random() * 2 + 0.5;
+        }
+        
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        const vertexShader = `
+            attribute float size;
+            varying vec3 vColor;
+            
+            void main() {
+                vColor = color;
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                gl_PointSize = size * (300.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+        
+        const fragmentShader = `
+            varying vec3 vColor;
+            
+            void main() {
+                float dist = length(gl_PointCoord - vec2(0.5));
+                if (dist > 0.5) discard;
+                
+                float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+                gl_FragColor = vec4(vColor, alpha * 0.8);
+            }
+        `;
+        
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            vertexColors: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particles = new THREE.Points(geometry, material);
+        scene.add(particles);
+        
+        // Mouse interaction
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+        
+        // Animation
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = clock.getElapsedTime();
+            
+            particles.rotation.y = time * 0.05;
+            particles.rotation.x = Math.sin(time * 0.1) * 0.1;
+            
+            // Mouse parallax
+            particles.position.x += (mouseX * 5 - particles.position.x) * 0.02;
+            particles.position.y += (-mouseY * 5 - particles.position.y) * 0.02;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        revealElements.forEach(el => revealObserver.observe(el));
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Close mobile menu on link click
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+        }
+        
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Form submission
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                // Create mailto link
+                const mailtoLink = `mailto:mdeni4969@gmail.com?subject=Contact from Portfolio - ${name}&body=Name: ${name}%0AEmail: ${email}%0A%0A${message}`;
+                window.location.href = mailtoLink;
+                
+                // Show success message
+                alert('Terima kasih! Email client Anda akan terbuka untuk mengirim pesan.');
+                contactForm.reset();
+            });
+        }
+        
+        // Skill bars animation on scroll
+        const skillBars = document.querySelectorAll('.skill-bar');
+        
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.transition = 'width 1s ease-out';
+                        bar.style.width = width;
+                    }, 100);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        skillBars.forEach(bar => skillObserver.observe(bar));
+    </script>
+</body>
+</html>
